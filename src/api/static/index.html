@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIA Profile Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .results {
+            display: none;
+            margin-top: 20px;
+        }
+        .results.active {
+            display: block;
+        }
+        .tab-container {
+            margin-top: 20px;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .loading.active {
+            display: block;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #3498db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <h1>CIA Profile Generator</h1>
+    
+    <div class="container">
+        <div class="input-section">
+            <h2>Enter Text to Analyze</h2>
+            <textarea id="text-input" placeholder="Enter or paste text here..."></textarea>
+            <button id="analyze-btn">Analyze Text</button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing text... This may take a minute.</p>
+        </div>
+        
+        <div class="results" id="results">
+            <h2>Analysis Results</h2>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="profile">Profile</div>
+                    <div class="tab" data-tab="reasoning">Reasoning</div>
+                    <div class="tab" data-tab="detailed">Detailed Report</div>
+                    <div class="tab" data-tab="intelligence">Intelligence Report</div>
+                    <div class="tab" data-tab="metrics">Metrics</div>
+                    <div class="tab" data-tab="security">Security Profile</div>
+                </div>
+                
+                <div class="tab-content active" id="profile-content">
+                    <h3>Structured Profile</h3>
+                    <pre id="profile-output"></pre>
+                </div>
+                
+                <div class="tab-content" id="reasoning-content">
+                    <h3>Reasoning Analysis</h3>
+                    <pre id="reasoning-output"></pre>
+                </div>
+                
+                <div class="tab-content" id="detailed-content">
+                    <h3>Detailed Report</h3>
+                    <pre id="detailed-output"></pre>
+                </div>
+                
+                <div class="tab-content" id="intelligence-content">
+                    <h3>Intelligence Report</h3>
+                    <pre id="intelligence-output"></pre>
+                </div>
+                
+                <div class="tab-content" id="metrics-content">
+                    <h3>Behavioral Metrics</h3>
+                    <pre id="metrics-output"></pre>
+                </div>
+                
+                <div class="tab-content" id="security-content">
+                    <h3>Security Profile</h3>
+                    <pre id="security-output"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const textInput = document.getElementById('text-input');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Update active content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-content`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Analyze button click
+            analyzeBtn.addEventListener('click', async () => {
+                const text = textInput.value.trim();
+                
+                if (!text) {
+                    alert('Please enter some text to analyze.');
+                    return;
+                }
+                
+                // Show loading, hide results
+                loading.classList.add('active');
+                results.classList.remove('active');
+                
+                try {
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            content: text,
+                            source: 'web',
+                            format: 'plain'
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Update results
+                    document.getElementById('profile-output').textContent = JSON.stringify(data.structured_profile, null, 2);
+                    document.getElementById('reasoning-output').textContent = data.reasoning;
+                    document.getElementById('detailed-output').textContent = data.detailed_report;
+                    document.getElementById('intelligence-output').textContent = data.intelligence_report;
+                    document.getElementById('metrics-output').textContent = JSON.stringify(data.metrics, null, 2);
+                    document.getElementById('security-output').textContent = JSON.stringify(data.security_profile, null, 2);
+                    
+                    // Check for errors in the response
+                    const hasErrors = Object.values(data).some(value => 
+                        typeof value === 'string' && value.includes('Error') ||
+                        typeof value === 'object' && value.error
+                    );
+                    
+                    if (hasErrors) {
+                        alert('Some parts of the analysis encountered errors. Please check the results for details.');
+                    }
+                    
+                    // Show results, hide loading
+                    results.classList.add('active');
+                    loading.classList.remove('active');
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while analyzing the text. Please try again.');
+                    loading.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
