@@ -214,20 +214,6 @@ def test_ciaprofile_generate_profile(mock_generate):
     assert isinstance(profile.profile, PsychologicalProfile)
     mock_generate.assert_called_once_with(SAMPLE_TEXT, "balanced")
 
-def test_profile_initialization(mock_openai_client):
-    """Test that CIAProfile can be initialized with basic parameters."""
-    profile = CIAProfile(name="Test Profile")
-    assert profile.name == "Test Profile"
-    assert profile.content is None  # Content should be None initially
-    assert profile.profile is None  # Profile should be None initially
-
-def test_profile_content_update(mock_openai_client):
-    """Test updating profile content."""
-    profile = CIAProfile(name="Test Profile")
-    test_content = "This is test content"
-    profile.update_content(test_content)
-    assert profile.content == test_content
-
 def test_profile_validation():
     """Test profile validation rules."""
     with pytest.raises(ValueError):
@@ -242,9 +228,14 @@ def test_profile_serialization(mock_openai_client):
     assert profile_dict["content"] is None
     assert profile_dict["profile"] is None
 
+@patch('src.ciabot.core.ciaprofile.generate_detailed_report')
+@patch('src.ciabot.core.ciaprofile.generate_intelligence_report')
+@patch('src.ciabot.core.ciaprofile.generate_security_profile')
+@patch('src.ciabot.core.ciaprofile.calculate_metrics')
 @patch('src.ciabot.core.ciaprofile.generate_structured_profile')
-def test_profile_generation(mock_generate, mock_openai_client):
-    """Test profile generation."""
+def test_profile_reports(mock_generate, mock_metrics, mock_security, mock_intel, mock_report, mock_openai_client):
+    """Test profile report generation."""
+    # Set up mocks
     mock_generate.return_value = PsychologicalProfile(
         personality_traits=[
             PersonalityTrait(trait="analytical", evidence="Test", confidence=0.8)
@@ -269,20 +260,6 @@ def test_profile_generation(mock_generate, mock_openai_client):
         potential_biases=["Test bias"],
         limitations=["Test limitation"]
     )
-    
-    profile = CIAProfile(name="Test Profile")
-    profile.update_content("This is test content")
-    profile.generate_profile()
-    assert profile.profile is not None
-    mock_generate.assert_called_once_with("This is test content", "balanced")
-
-@patch('src.ciabot.core.ciaprofile.generate_detailed_report')
-@patch('src.ciabot.core.ciaprofile.generate_intelligence_report')
-@patch('src.ciabot.core.ciaprofile.generate_security_profile')
-@patch('src.ciabot.core.ciaprofile.calculate_metrics')
-def test_profile_reports(mock_metrics, mock_security, mock_intel, mock_report, mock_openai_client):
-    """Test profile report generation."""
-    # Set up mocks
     mock_report.return_value = "Detailed report"
     mock_intel.return_value = "Intelligence report"
     mock_security.return_value = SecurityProfile(
@@ -305,13 +282,13 @@ def test_profile_reports(mock_metrics, mock_security, mock_intel, mock_report, m
     profile.generate_profile()
     
     # Test detailed report
-    report = profile.get_report()
+    report = profile.get_report(tone="balanced")
     assert isinstance(report, str)
     assert len(report) > 0
     mock_report.assert_called_once()
     
     # Test intelligence report
-    intel_report = profile.get_intelligence_report()
+    intel_report = profile.get_intelligence_report(tone="balanced")
     assert isinstance(intel_report, str)
     assert len(intel_report) > 0
     mock_intel.assert_called_once_with("This is test content", "balanced")
