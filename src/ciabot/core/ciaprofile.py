@@ -95,6 +95,57 @@ class SecurityProfile(BaseModel):
     predictable_behaviors: List[str]
     suggested_countermeasures: List[str]
 
+class CommunicationStyle(BaseModel):
+    """Analysis of communication patterns and preferences."""
+    primary_style: str  # e.g., "direct", "diplomatic", "analytical", "empathetic"
+    secondary_style: str
+    communication_strengths: List[str]
+    communication_challenges: List[str]
+    preferred_channels: List[str]  # e.g., "written", "verbal", "visual"
+    adaptation_capacity: float = Field(..., ge=0.0, le=1.0)  # Ability to adjust communication style
+    evidence: List[str]
+
+class DecisionMakingPattern(BaseModel):
+    """Analysis of decision-making approach and effectiveness."""
+    primary_approach: str  # e.g., "analytical", "intuitive", "collaborative", "decisive"
+    decision_speed: float = Field(..., ge=0.0, le=1.0)  # 0 = very slow, 1 = very fast
+    risk_tolerance: float = Field(..., ge=0.0, le=1.0)
+    information_gathering_style: str  # e.g., "comprehensive", "focused", "minimal"
+    decision_quality_indicators: List[str]
+    common_biases: List[str]
+    evidence: List[str]
+
+class StressResponse(BaseModel):
+    """Analysis of stress handling and coping mechanisms."""
+    primary_coping_mechanism: str
+    stress_threshold: float = Field(..., ge=0.0, le=1.0)  # 0 = low threshold, 1 = high threshold
+    recovery_speed: float = Field(..., ge=0.0, le=1.0)  # 0 = slow recovery, 1 = fast recovery
+    stress_indicators: List[str]
+    coping_strategies: List[str]
+    potential_triggers: List[str]
+    evidence: List[str]
+
+class LeadershipPotential(BaseModel):
+    """Assessment of leadership capabilities and style."""
+    leadership_style: str  # e.g., "transformational", "servant", "autocratic", "democratic"
+    influence_capacity: float = Field(..., ge=0.0, le=1.0)
+    vision_development: float = Field(..., ge=0.0, le=1.0)
+    team_building_ability: float = Field(..., ge=0.0, le=1.0)
+    strategic_thinking: float = Field(..., ge=0.0, le=1.0)
+    key_strengths: List[str]
+    development_areas: List[str]
+    evidence: List[str]
+
+class TeamDynamics(BaseModel):
+    """Analysis of team interaction and compatibility."""
+    preferred_role: str  # e.g., "leader", "innovator", "mediator", "executor"
+    collaboration_style: str
+    conflict_handling: str
+    team_contribution: List[str]
+    potential_challenges: List[str]
+    ideal_team_composition: List[str]
+    evidence: List[str]
+
 class PsychologicalProfile(BaseModel):
     """A comprehensive psychological profile."""
     personality_traits: List[PersonalityTrait]
@@ -114,95 +165,126 @@ class PsychologicalProfile(BaseModel):
     cultural_lexicons: Optional[List[str]] = None
     profile_metrics: Optional[ProfileMetrics] = None
     security_profile: Optional[SecurityProfile] = None
+    # New fields
+    communication_style: Optional[CommunicationStyle] = None
+    decision_making: Optional[DecisionMakingPattern] = None
+    stress_response: Optional[StressResponse] = None
+    leadership_potential: Optional[LeadershipPotential] = None
+    team_dynamics: Optional[TeamDynamics] = None
 
 # ===== PROMPT GENERATION =====
 
-def generate_profile_prompt(text: str, tone: str = "balanced") -> str:
-    """
-    Generate a specialized prompt for psychological profiling.
-    
-    Args:
-        text: The text to analyze
-        tone: The desired tone of the profile ("positive", "negative", or "balanced")
-        
-    Returns:
-        A detailed prompt for the model
-    """
-    try:
-        # Get the appropriate template based on the desired tone
-        template = get_profile_template(tone)
-        
-        # Get an example profile for reference
-        example = get_example_profile(tone)
-        
-        # Identify the type of text to provide more specific instructions
-        text_type_prompt = """
-        First, identify the type of text you're analyzing:
-        - Direct statements: Personal thoughts, feelings, or experiences
-        - Random excerpts: Fragments of text without clear context
-        - ChatGPT conversations: Interactions with AI, including prompts and responses
-        - Essays: Structured written content with a clear purpose
-        - Text messages: Informal communication, possibly fragmented
-        - Other: Identify the type if it doesn't fit the above categories
-        
-        Then, adapt your analysis approach based on the text type:
-        - For direct statements: Focus on emotional content, personal values, and self-perception
-        - For random excerpts: Look for patterns and themes that might reveal underlying psychology
-        - For ChatGPT conversations: Analyze both the user's prompts and how they respond to AI
-        - For essays: Examine argument structure, evidence selection, and conclusion formation
-        - For text messages: Consider informal language patterns, emoji usage, and communication style
-        """
-        
-        # Advanced analysis directives
-        advanced_directives = """
-        **Neurolinguistic Focus:**
-        1. Calculate pronoun ratios (I/we/they) and map to self-concept
-        2. Analyze verb tense distribution for temporal orientation
-        3. Quantify hedge words (might/could) vs definitive language
-        4. Measure lexical density and syntactic complexity
-        5. Identify semantic primes in emotional expression
+def generate_profile_prompt(text: str, analysis_type: str = "general") -> str:
+    """Generate a specialized prompt for psychological profiling."""
+    base_prompt = f"""You are an expert CIA psychological profiler with extensive experience in behavioral analysis, neuro-linguistic programming, and counterintelligence operations.
+Your task is to conduct a comprehensive neuro-linguistic psycho-analysis of the following text to generate a detailed psychological profile.
+Focus on both explicit statements and implicit patterns that reveal psychological traits, behavioral tendencies, and potential vulnerabilities.
 
-        **Psychological Deep Dive:**
-        1. Apply Dark Triad detection framework
-        2. Map language to Hermann Brain Dominance model
-        3. Analyze conceptual metaphors (Lakoffian frames)
-        4. Detect cognitive dissonance patterns
-        5. Identify narrative schema violations
+Text to analyze:
+{text}
 
-        **Behavioral Forecasting:**
-        1. Predict 3 most likely actions under stress
-        2. Identify optimal persuasion strategies
-        3. Determine vulnerability to recruitment
-        4. Assess deception probability patterns
-        5. Model information sensitivity thresholds
-        """
-        
-        completion = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system", 
-                    "content": f"""
-                    {template}
-                    
-                    {text_type_prompt}
-                    
-                    {advanced_directives}
-                    
-                    Here is an example of the kind of analysis we're looking for:
-                    
-                    {example}
-                    
-                    Use this example as a reference for the level of detail, structure, and tone we want.
-                    """
-                },
-                {"role": "user", "content": f"Create a prompt for analyzing this text: {text[:100]}..."},
-            ],
-        )
-        return completion.choices[0].message.content
-    except Exception as e:
-        print(f"Error generating profile prompt: {str(e)}")
-        return None
+Conduct a CIA-level psychological assessment that includes:
+
+1. Personality Traits:
+   - Core personality characteristics and behavioral patterns
+   - Value systems and motivational drivers
+   - Potential psychological vulnerabilities
+   - Behavioral consistency indicators
+
+2. Emotional States:
+   - Primary emotional patterns and regulation capacity
+   - Emotional expression style and suppression indicators
+   - Emotional intelligence and manipulation potential
+   - Emotional stability under pressure
+
+3. Cognitive Patterns:
+   - Thinking style and information processing
+   - Problem-solving approach and adaptability
+   - Decision-making patterns and risk assessment
+   - Cognitive biases and blind spots
+   - Mental model construction and worldview
+
+4. Writing Style:
+   - Formality level and social positioning
+   - Technical precision and attention to detail
+   - Emotional content and self-disclosure patterns
+   - Structural organization and planning capacity
+   - Language complexity and vocabulary selection
+
+5. Communication Style:
+   - Primary and secondary communication styles
+   - Communication strengths and potential manipulation tactics
+   - Preferred communication channels and information sharing
+   - Adaptation capacity and social flexibility
+   - Evidence from text with specific examples
+
+6. Decision-Making Patterns:
+   - Primary decision-making approach and methodology
+   - Decision speed, quality, and consistency
+   - Risk tolerance and uncertainty handling
+   - Information gathering style and confirmation bias
+   - Common decision-making biases and heuristics
+
+7. Stress Response:
+   - Primary coping mechanisms and resilience indicators
+   - Stress threshold and breaking point indicators
+   - Recovery patterns and adaptation strategies
+   - Stress indicators and behavioral changes under pressure
+   - Potential triggers and psychological vulnerabilities
+
+8. Leadership Potential:
+   - Leadership style and influence methodology
+   - Influence capacity and persuasion techniques
+   - Vision development and strategic thinking
+   - Team building ability and group dynamics
+   - Strategic thinking and long-term planning
+
+9. Team Dynamics:
+   - Preferred team role and social positioning
+   - Collaboration style and group contribution
+   - Conflict handling and resolution approach
+   - Team contribution and value proposition
+   - Ideal team composition and compatibility
+
+10. Security Profile:
+    - OPSEC awareness and information security practices
+    - Information handling and disclosure patterns
+    - Risk management and threat assessment
+    - Counterintelligence indicators and vulnerabilities
+    - Deception detection and truthfulness assessment
+
+For each aspect, provide:
+- Specific evidence from the text with direct quotes
+- Confidence level in the assessment (0.0-1.0)
+- Potential alternative interpretations
+- Limitations of the analysis
+- Counterintelligence implications
+
+Format the output as a structured JSON object matching the PsychologicalProfile schema.
+Ensure all assessments are evidence-based and avoid speculative conclusions.
+Apply neuro-linguistic programming principles to identify embedded commands, presuppositions, and linguistic patterns that reveal deeper psychological structures."""
+
+    # Add type-specific directives
+    if analysis_type == "technical":
+        base_prompt += """
+Additional focus areas for technical analysis:
+- Technical communication patterns and knowledge gaps
+- Problem-solving methodology and approach
+- Code/documentation style and attention to detail
+- Technical decision-making and risk assessment
+- Collaboration in technical contexts and knowledge sharing
+- Information security practices and vulnerabilities"""
+    elif analysis_type == "social":
+        base_prompt += """
+Additional focus areas for social analysis:
+- Social interaction patterns and relationship dynamics
+- Group behavior and conformity indicators
+- Social influence and persuasion techniques
+- Communication in social contexts and impression management
+- Social positioning and status indicators
+- Relationship building and maintenance strategies"""
+
+    return base_prompt
 
 # ===== REASONING =====
 
@@ -396,6 +478,34 @@ def generate_detailed_report(profile: PsychologicalProfile, tone: str = "balance
                     The report should be written in a style similar to CIA intelligence reports,
                     with clear sections, professional language, and detailed analysis.
                     
+                    The report should include all the following sections:
+                    
+                    1. Executive Summary
+                    2. Core Personality Analysis
+                       - Personality Traits
+                       - Emotional Profile
+                       - Cognitive Patterns
+                    3. Communication & Decision Making
+                       - Communication Style
+                       - Decision Making Patterns
+                    4. Stress & Leadership
+                       - Stress Response Profile
+                       - Leadership Assessment
+                    5. Team Dynamics
+                       - Team Compatibility
+                    6. Writing & Communication Analysis
+                       - Writing Style
+                       - Linguistic Markers
+                    7. Security Profile
+                    8. Confidence Assessment
+                       - Overall Confidence Score
+                       - Potential Biases
+                       - Analysis Limitations
+                    9. Evidence Base
+                    
+                    For each section, provide specific evidence from the text with direct quotes where possible.
+                    Include confidence levels for assessments and highlight any counterintelligence implications.
+                    
                     Here is an example of the kind of report we're looking for:
                     
                     {example}
@@ -469,6 +579,36 @@ def generate_intelligence_report(text: str, tone: str = "balanced") -> str:
         3. Determine vulnerability to recruitment
         4. Assess deception probability patterns
         5. Model information sensitivity thresholds
+        
+        **Communication Analysis:**
+        1. Identify primary and secondary communication styles
+        2. Assess communication strengths and potential manipulation tactics
+        3. Evaluate adaptation capacity and social flexibility
+        4. Analyze information sharing patterns and disclosure tendencies
+        
+        **Decision-Making Assessment:**
+        1. Evaluate decision-making approach and methodology
+        2. Assess risk tolerance and uncertainty handling
+        3. Identify information gathering style and confirmation bias
+        4. Analyze decision speed, quality, and consistency
+        
+        **Stress Response Profiling:**
+        1. Identify primary coping mechanisms and resilience indicators
+        2. Assess stress threshold and breaking point indicators
+        3. Evaluate recovery patterns and adaptation strategies
+        4. Analyze stress indicators and behavioral changes under pressure
+        
+        **Leadership Potential:**
+        1. Evaluate leadership style and influence methodology
+        2. Assess influence capacity and persuasion techniques
+        3. Analyze vision development and strategic thinking
+        4. Evaluate team building ability and group dynamics
+        
+        **Team Dynamics:**
+        1. Identify preferred team role and social positioning
+        2. Assess collaboration style and group contribution
+        3. Evaluate conflict handling and resolution approach
+        4. Analyze team contribution and value proposition
         """
         
         completion = client.chat.completions.create(
@@ -483,14 +623,30 @@ def generate_intelligence_report(text: str, tone: str = "balanced") -> str:
                     
                     {advanced_directives}
                     
-                    Here is an example of the kind of analysis we're looking for:
+                    Create a comprehensive intelligence report that includes:
+                    
+                    1. Executive Summary
+                    2. Key Behavioral Patterns
+                    3. Communication Analysis
+                    4. Decision-Making Assessment
+                    5. Stress Response Profile
+                    6. Leadership Assessment
+                    7. Team Dynamics
+                    8. Security Implications
+                    9. Confidence Assessment
+                    10. Evidence Base
+                    
+                    For each section, provide specific evidence from the text with direct quotes where possible.
+                    Include confidence levels for assessments and highlight any counterintelligence implications.
+                    
+                    Here is an example of the kind of report we're looking for:
                     
                     {example}
                     
                     Use this example as a reference for the level of detail, structure, and tone we want.
                     """
                 },
-                {"role": "user", "content": f"Analyze this text and generate a complete intelligence report: {text}"},
+                {"role": "user", "content": f"Text to analyze: {text[:1000]}...\n\nGenerate a comprehensive intelligence report."},
             ],
         )
         return completion.choices[0].message.content

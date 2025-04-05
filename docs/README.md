@@ -11,6 +11,11 @@ The CIA Profile Generator is a sophisticated text analysis tool that can:
 - Generate intelligence reports
 - Calculate behavioral metrics
 - Create security profiles
+- Assess communication styles
+- Evaluate decision-making patterns
+- Profile stress responses
+- Analyze leadership potential
+- Assess team dynamics
 
 ## Project Structure
 
@@ -77,7 +82,7 @@ metrics = calculate_metrics(profile)
 
 ### Example Script
 
-The repository includes an example script `analyze_author.py` that demonstrates how to use the CIA Profile Generator to analyze a text file. The script:
+The repository includes an example script `analyze_text.py` that demonstrates how to use the CIA Profile Generator to analyze a text file. The script:
 
 1. Reads text from a file
 2. Generates various reports and profiles
@@ -85,8 +90,62 @@ The repository includes an example script `analyze_author.py` that demonstrates 
 
 To run the example:
 ```bash
-python analyze_author.py
+python src/examples/analyze_text.py
 ```
+
+## Analysis Dimensions
+
+The CIA Profile Generator analyzes text across multiple dimensions:
+
+1. **Core Psychological Analysis**
+   - Personality traits
+   - Emotional states
+   - Cognitive patterns
+   - Writing style
+   - Linguistic markers
+
+2. **Behavioral Analysis**
+   - Neurolinguistic features
+   - Dark triad traits
+   - Behavioral predictions
+   - Cognitive biases
+   - Cultural lexicons
+
+3. **Communication Analysis**
+   - Primary and secondary communication styles
+   - Communication strengths and challenges
+   - Adaptation capacity
+   - Information sharing patterns
+
+4. **Decision-Making Assessment**
+   - Decision-making approach
+   - Risk tolerance
+   - Information gathering style
+   - Decision quality indicators
+
+5. **Stress Response Profiling**
+   - Coping mechanisms
+   - Stress thresholds
+   - Recovery patterns
+   - Behavioral changes under pressure
+
+6. **Leadership Potential**
+   - Leadership style
+   - Influence capacity
+   - Vision development
+   - Team building ability
+
+7. **Team Dynamics**
+   - Preferred team role
+   - Collaboration style
+   - Conflict handling
+   - Team contribution
+
+8. **Security Profile**
+   - OPSEC weaknesses
+   - Detectable patterns
+   - Predictable behaviors
+   - Countermeasures
 
 ## Output Files
 
