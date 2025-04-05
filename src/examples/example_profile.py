@@ -6,7 +6,7 @@ that integrates all analyses into a single consolidated output.
 """
 
 import json
-from ..core.ciaprofile import (
+from src.core.ciaprofile import (
     generate_structured_profile,
     generate_detailed_report,
     generate_intelligence_report,

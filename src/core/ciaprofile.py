@@ -13,7 +13,7 @@ from typing import List, Dict, Any, Optional, Union
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from openai import OpenAI
-from ..templates.profile_templates import get_profile_template, get_example_profile
+from src.templates.profile_templates import get_profile_template, get_example_profile
 
 # Load environment variables
 load_dotenv()
