@@ -1,66 +1,100 @@
 # CIA Profile Generator
 
-A sophisticated psychological profiling system that analyzes text to produce detailed psychological profiles in a CIA intelligence report style.
+A Python-based tool for generating psychological profiles and intelligence reports from text input.
 
-## Features
+## Overview
 
-- **Comprehensive Psychological Analysis**: Personality traits, emotional states, cognitive patterns
-- **Neurolinguistic Analysis**: Syntactic complexity, pronoun ratios, temporal orientation
-- **Dark Triad Assessment**: Narcissism, machiavellianism, and psychopathy analysis
-- **Behavioral Predictions**: Scenario-based predictions with confidence levels
-- **Quantitative Metrics**: Persuasion susceptibility, deception capacity, risk tolerance
-- **Security Profile**: Operational security risks, detectable patterns, and countermeasures
+The CIA Profile Generator is a sophisticated text analysis tool that can:
+- Generate psychological profiles from text
+- Analyze text with reasoning
+- Create detailed reports
+- Generate intelligence reports
+- Calculate behavioral metrics
+- Create security profiles
 
-## Repository Structure
+## Project Structure
 
-- `src/core/`: Core functionality for psychological profiling
-- `src/templates/`: Templates for different analysis tones
-- `src/utils/`: Utility functions for report generation
-- `src/examples/`: Example scripts demonstrating usage
-- `src/reports/`: Generated profile reports
-- `tests/`: Test files for the codebase
-- `docs/`: Documentation
+```
+CIABot/
+├── src/
+│   └── core/
+│       └── ciaprofile.py      # Core implementation
+├── output/                    # Generated output files
+├── analyze_author.py         # Example script for author analysis
+├── author_sample.txt         # Sample text for analysis
+├── setup.py                  # Package setup file
+└── README.md                 # This file
+```
 
-## Setup
+## Installation
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/stef-writes/myCIAprofileGPT.git
-   cd myCIAprofileGPT
-   ```
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/CIABot.git
+cd CIABot
+```
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Set up environment variables:
-   Create a `.env` file with your OpenAI API key:
-   ```
-   OPENAI_API_KEY=your_api_key_here
-   ```
+2. Install the package:
+```bash
+pip install -e .
+```
 
 ## Usage
 
 ### Basic Usage
 
 ```python
-from src.core.ciaprofile import generate_structured_profile
+from src.core.ciaprofile import (
+    generate_profile_prompt,
+    analyze_text_with_reasoning,
+    generate_structured_profile,
+    generate_detailed_report,
+    generate_intelligence_report,
+    calculate_metrics,
+    generate_security_profile
+)
 
-# Generate a structured profile
-profile = generate_structured_profile("Your text here", tone="balanced")
-print(profile)
+# Your text to analyze
+text = "Your text here..."
+
+# Generate a profile
+profile = generate_structured_profile(text)
+
+# Generate a detailed report
+report = generate_detailed_report(profile)
+
+# Calculate metrics
+metrics = calculate_metrics(profile)
 ```
 
-### Generating a Comprehensive Report
+### Example Script
 
-```python
-from src.utils.report_generator import generate_profile_report
+The repository includes an example script `analyze_author.py` that demonstrates how to use the CIA Profile Generator to analyze a text file. The script:
 
-# Generate a comprehensive profile report
-generate_profile_report("Your text here", output_filename="profile_report.md")
+1. Reads text from a file
+2. Generates various reports and profiles
+3. Saves all outputs to the `output` directory with unique timestamps
+
+To run the example:
+```bash
+python analyze_author.py
 ```
+
+## Output Files
+
+The generator creates several types of output files:
+- `*_prompt.txt`: The generated profile prompt
+- `*_reasoning.txt`: Text analysis with reasoning
+- `*_profile.json`: Structured profile data
+- `*_detailed_report.md`: Detailed analysis report
+- `*_intelligence_report.md`: Intelligence report
+- `*_metrics.json`: Calculated behavioral metrics
+- `*_security_profile.json`: Security profile data
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the LICENSE file for details.
