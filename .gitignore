@@ -1,5 +1,9 @@
-# Environment variables
+# Virtual Environment
+venv/
+env/
 .env
+.venv
+ENV/
 
 # Python
 __pycache__/
@@ -23,28 +27,24 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environment
-venv/
-env/
-ENV/
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
 
-# IDE
+# IDE specific files
 .idea/
 .vscode/
 *.swp
 *.swo
-
-# OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
 
 # Project specific
-output/
-analyze_author.py
-author_sample.txt
+test_data/
 *.log 

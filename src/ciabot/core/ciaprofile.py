@@ -587,6 +587,59 @@ def generate_security_profile(text: str) -> SecurityProfile:
         print(f"Error generating security profile: {str(e)}")
         return None
 
+class CIAProfile:
+    """A class to manage CIA profiles."""
+    
+    def __init__(self, name: str):
+        """Initialize a CIA profile with a name."""
+        if not name:
+            raise ValueError("Profile name cannot be empty")
+        self.name = name
+        self.content = None
+        self.profile = None
+    
+    def update_content(self, content: str) -> None:
+        """Update the profile content."""
+        self.content = content
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert the profile to a dictionary."""
+        return {
+            "name": self.name,
+            "content": self.content,
+            "profile": self.profile.dict() if self.profile else None
+        }
+    
+    def generate_profile(self, tone: str = "balanced") -> None:
+        """Generate a profile from the content."""
+        if not self.content:
+            raise ValueError("No content to generate profile from")
+        self.profile = generate_structured_profile(self.content, tone)
+    
+    def get_report(self, tone: str = "balanced") -> str:
+        """Get a detailed report from the profile."""
+        if not self.profile:
+            raise ValueError("No profile to generate report from")
+        return generate_detailed_report(self.profile, tone)
+    
+    def get_intelligence_report(self, tone: str = "balanced") -> str:
+        """Get an intelligence report from the profile."""
+        if not self.content:
+            raise ValueError("No content to generate intelligence report from")
+        return generate_intelligence_report(self.content, tone)
+    
+    def get_security_profile(self) -> SecurityProfile:
+        """Get a security profile from the content."""
+        if not self.content:
+            raise ValueError("No content to generate security profile from")
+        return generate_security_profile(self.content)
+    
+    def get_metrics(self) -> ProfileMetrics:
+        """Get metrics from the content."""
+        if not self.content:
+            raise ValueError("No content to calculate metrics from")
+        return calculate_metrics(self.content)
+
 def main():
     """Run the CIA Profile Generator."""
     print("=== CIA Profile Generator ===")

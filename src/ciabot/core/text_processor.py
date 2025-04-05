@@ -12,7 +12,7 @@ import json
 import os
 import datetime
 from pathlib import Path
-from ..utils.paths import get_project_root, get_output_path
+from src.utils.paths import get_project_root, get_output_path
 
 class TextInput(BaseModel):
     """Model for text input with metadata."""
