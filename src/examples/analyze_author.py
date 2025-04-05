@@ -6,8 +6,9 @@ Analyze autobiographical text using the CIA Profile Generator.
 import os
 import json
 import datetime
+from pathlib import Path
 from dotenv import load_dotenv
-from src.core.ciaprofile import (
+from ciabot.core.ciaprofile import (
     generate_profile_prompt,
     analyze_text_with_reasoning,
     generate_structured_profile,
@@ -16,7 +17,7 @@ from src.core.ciaprofile import (
     calculate_metrics,
     generate_security_profile
 )
-from src.core.text_processor import TextProcessor
+from ciabot.core.text_processor import TextProcessor
 
 # Load environment variables
 load_dotenv()
@@ -34,8 +35,12 @@ def main():
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     unique_id = f"author_profile_{timestamp}"
 
+    # Get the path to author_sample.txt
+    current_dir = Path(__file__).parent
+    sample_file = current_dir / "author_sample.txt"
+
     # Process the text input using TextProcessor
-    text_input = TextProcessor.from_file("author_sample.txt")
+    text_input = TextProcessor.from_file(str(sample_file))
     print(f"Processing text from {text_input.source} with format {text_input.format}")
     print(f"Text length: {text_input.metadata['length']} characters")
 
@@ -50,7 +55,7 @@ def main():
     
     # Analyze text with reasoning
     print("\n2. Analyzing Text with Reasoning...")
-    reasoning = analyze_text_with_reasoning(text_input.content)
+    reasoning = analyze_text_with_reasoning(text_input.content, prompt)
     with open(f"{output_dir}/{unique_id}_reasoning.txt", "w") as f:
         f.write(reasoning)
     print(f"Reasoning analysis saved to: {output_dir}/{unique_id}_reasoning.txt")
@@ -59,8 +64,10 @@ def main():
     print("\n3. Generating Structured Profile...")
     profile = generate_structured_profile(text_input.content)
     if profile:
+        # Convert profile to dictionary for JSON serialization
+        profile_dict = profile.model_dump()
         with open(f"{output_dir}/{unique_id}_profile.json", "w") as f:
-            json.dump(profile, f, indent=2)
+            json.dump(profile_dict, f, indent=2)
         print(f"Structured profile saved to: {output_dir}/{unique_id}_profile.json")
         
         # Generate detailed report
@@ -80,16 +87,22 @@ def main():
         # Calculate metrics
         print("\n6. Calculating Metrics...")
         metrics = calculate_metrics(text_input.content)
-        with open(f"{output_dir}/{unique_id}_metrics.json", "w") as f:
-            json.dump(metrics, f, indent=2)
-        print(f"Metrics saved to: {output_dir}/{unique_id}_metrics.json")
+        if metrics:
+            # Convert metrics to dictionary for JSON serialization
+            metrics_dict = metrics.model_dump()
+            with open(f"{output_dir}/{unique_id}_metrics.json", "w") as f:
+                json.dump(metrics_dict, f, indent=2)
+            print(f"Metrics saved to: {output_dir}/{unique_id}_metrics.json")
         
         # Generate security profile
         print("\n7. Generating Security Profile...")
         security_profile = generate_security_profile(text_input.content)
-        with open(f"{output_dir}/{unique_id}_security_profile.json", "w") as f:
-            json.dump(security_profile, f, indent=2)
-        print(f"Security profile saved to: {output_dir}/{unique_id}_security_profile.json")
+        if security_profile:
+            # Convert security profile to dictionary for JSON serialization
+            security_dict = security_profile.model_dump()
+            with open(f"{output_dir}/{unique_id}_security_profile.json", "w") as f:
+                json.dump(security_dict, f, indent=2)
+            print(f"Security profile saved to: {output_dir}/{unique_id}_security_profile.json")
     else:
         print("\nFailed to generate profile.")
     

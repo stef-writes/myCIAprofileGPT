@@ -70,16 +70,16 @@ class TextProcessor:
         )
     
     @classmethod
-    def from_text(cls, content: str, source: str = "web", format: str = "plain") -> "TextProcessor":
-        """Create a TextProcessor instance from text content."""
-        return cls(text=content, source=source, format=format)
+    def from_text(cls, content: str, source: str = "web", format: str = "plain") -> TextInput:
+        """Create a TextInput from text content."""
+        return cls.process_text(content=content, source=source, format=format)
     
     @classmethod
-    def from_file(cls, file_path: str, source: str = "file", format: str = "plain") -> "TextProcessor":
-        """Create a TextProcessor instance from a file."""
+    def from_file(cls, file_path: str, source: str = "file", format: str = "plain") -> TextInput:
+        """Create a TextInput from a file."""
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        return cls(text=content, source=source, format=format)
+        return cls.process_text(content=content, source=source, format=format)
     
     @staticmethod
     def from_json(json_data: Union[str, Dict]) -> TextInput:
@@ -103,25 +103,6 @@ class TextProcessor:
             metadata=data.get("metadata", {}),
             format=data.get("format", "plain")
         )
-
-    def __init__(self, text: str, source: str = "web", format: str = "plain"):
-        self.text = text
-        self.source = source
-        self.format = format
-        self.metadata = {
-            "source": source,
-            "format": format,
-            "timestamp": datetime.datetime.now().isoformat()
-        }
-    
-    def process(self) -> str:
-        """Process the text and return the normalized version."""
-        # Add any text processing logic here
-        return str(self.text).strip()
-    
-    def get_metadata(self) -> Dict[str, Any]:
-        """Get the metadata associated with the text."""
-        return self.metadata 
 
 def read_text_file(file_path: str) -> str:
     """Read text from a file with proper path resolution."""
