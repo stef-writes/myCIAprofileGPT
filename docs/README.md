@@ -17,13 +17,21 @@ The CIA Profile Generator is a sophisticated text analysis tool that can:
 ```
 CIABot/
 ├── src/
-│   └── core/
-│       └── ciaprofile.py      # Core implementation
-├── output/                    # Generated output files
-├── analyze_author.py         # Example script for author analysis
-├── author_sample.txt         # Sample text for analysis
-├── setup.py                  # Package setup file
-└── README.md                 # This file
+│   └── ciabot/
+│       ├── core/
+│       │   ├── ciaprofile.py    # Core profile generation
+│       │   └── __init__.py
+│       └── __init__.py          # Package initialization
+├── docs/                        # Documentation
+│   └── README.md               # This file
+├── config/                     # Configuration files
+│   ├── .env.example
+│   └── requirements.txt
+├── examples/                   # Example scripts
+│   └── example_usage.py
+├── scripts/                    # Utility scripts
+├── output/                     # Generated output files
+└── setup.py                    # Package setup file
 ```
 
 ## Installation
@@ -44,7 +52,7 @@ pip install -e .
 ### Basic Usage
 
 ```python
-from src.core.ciaprofile import (
+from ciabot.core.ciaprofile import (
     generate_profile_prompt,
     analyze_text_with_reasoning,
     generate_structured_profile,

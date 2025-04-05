@@ -3,7 +3,7 @@
 Example script demonstrating how to use the CIA Profile Generator.
 """
 
-from src.core.ciaprofile import (
+from ciabot.core.ciaprofile import (
     generate_profile_prompt,
     analyze_text_with_reasoning,
     generate_structured_profile,

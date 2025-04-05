@@ -1,4 +1,9 @@
 from setuptools import setup, find_packages
+import os
+from pathlib import Path
+
+# Get the absolute path to the README file
+README_PATH = Path(__file__).parent / "docs" / "README.md"
 
 setup(
     name="ciabot",
@@ -24,7 +29,7 @@ setup(
     author="Stefano Paolina",
     author_email="stefano.paolina99@gmail.comm",
     description="CIA Profile Generator using OpenAI's ChatGPT API",
-    long_description=open("README.md").read(),
+    long_description=README_PATH.read_text(),
     long_description_content_type="text/markdown",
     url="https://github.com/yourusername/ciabot",
     classifiers=[

@@ -3,12 +3,15 @@
     "src"
   ],
   "exclude": [
-    "**/node_modules",
-    "**/__pycache__"
+    "**/__pycache__",
+    "**/.*",
+    "venv",
+    "extraai",
+    "ai-guides"
   ],
   "reportMissingImports": "error",
   "reportMissingTypeStubs": "warning",
-  "pythonVersion": "3.8",
+  "pythonVersion": "3.10",
   "typeCheckingMode": "basic",
   "useLibraryCodeForTypes": true,
   "reportGeneralTypeIssues": "warning",

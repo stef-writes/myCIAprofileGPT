@@ -13,8 +13,8 @@ from pydantic import BaseModel
 import os
 import logging
 from pathlib import Path
-from src.core.text_processor import TextProcessor
-from src.core.ciaprofile import (
+from ciabot.core.text_processor import TextProcessor
+from ciabot.core.ciaprofile import (
     generate_profile_prompt,
     analyze_text_with_reasoning,
     generate_structured_profile,

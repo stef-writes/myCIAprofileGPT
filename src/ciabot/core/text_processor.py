@@ -11,6 +11,8 @@ from pydantic import BaseModel, Field
 import json
 import os
 import datetime
+from pathlib import Path
+from ..utils.paths import get_project_root, get_output_path
 
 class TextInput(BaseModel):
     """Model for text input with metadata."""
@@ -24,7 +26,7 @@ class TextProcessor:
     
     @staticmethod
     def process_text(
-        content: Union[str, bytes],
+        content: Union[str, bytes, memoryview],
         source: str = "direct",
         metadata: Optional[Dict[str, Any]] = None,
         format: str = "plain"
@@ -41,12 +43,14 @@ class TextProcessor:
         Returns:
             TextInput object with processed text and metadata
         """
-        # Convert bytes to string if necessary
-        if isinstance(content, bytes):
+        # Convert bytes or memoryview to string if necessary
+        if isinstance(content, memoryview):
+            content = content.tobytes().decode('utf-8')
+        elif isinstance(content, bytes):
             content = content.decode('utf-8')
             
         # Clean and normalize text
-        content = content.strip()
+        content = str(content).strip()
         
         # Create metadata if not provided
         if metadata is None:
@@ -65,32 +69,17 @@ class TextProcessor:
             format=format
         )
     
-    @staticmethod
-    def from_file(file_path: str, format: str = "plain") -> TextInput:
-        """
-        Process text from a file.
-        
-        Args:
-            file_path: Path to the text file
-            format: Format of the text
-            
-        Returns:
-            TextInput object with processed text and metadata
-        """
+    @classmethod
+    def from_text(cls, content: str, source: str = "web", format: str = "plain") -> "TextProcessor":
+        """Create a TextProcessor instance from text content."""
+        return cls(text=content, source=source, format=format)
+    
+    @classmethod
+    def from_file(cls, file_path: str, source: str = "file", format: str = "plain") -> "TextProcessor":
+        """Create a TextProcessor instance from a file."""
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-            
-        metadata = {
-            "file_path": file_path,
-            "file_size": os.path.getsize(file_path)
-        }
-        
-        return TextProcessor.process_text(
-            content=content,
-            source="file",
-            metadata=metadata,
-            format=format
-        )
+        return cls(text=content, source=source, format=format)
     
     @staticmethod
     def from_json(json_data: Union[str, Dict]) -> TextInput:
@@ -125,23 +114,23 @@ class TextProcessor:
             "timestamp": datetime.datetime.now().isoformat()
         }
     
-    @classmethod
-    def from_text(cls, content: str, source: str = "web", format: str = "plain") -> "TextProcessor":
-        """Create a TextProcessor instance from text content."""
-        return cls(text=content, source=source, format=format)
-    
-    @classmethod
-    def from_file(cls, file_path: str, source: str = "file", format: str = "plain") -> "TextProcessor":
-        """Create a TextProcessor instance from a file."""
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-        return cls(text=content, source=source, format=format)
-    
     def process(self) -> str:
         """Process the text and return the normalized version."""
         # Add any text processing logic here
-        return self.text.strip()
+        return str(self.text).strip()
     
     def get_metadata(self) -> Dict[str, Any]:
         """Get the metadata associated with the text."""
         return self.metadata 
+
+def read_text_file(file_path: str) -> str:
+    """Read text from a file with proper path resolution."""
+    # Convert string path to Path object
+    path = Path(file_path)
+    
+    # If path is not absolute, assume it's relative to project root
+    if not path.is_absolute():
+        path = get_project_root() / path
+    
+    with open(path, 'r', encoding='utf-8') as f:
+        return f.read() 

@@ -2,17 +2,18 @@
 """
 Example script demonstrating the CIA Profile Generator with a complex text sample.
 This script processes various types of text and generates a comprehensive psychological profile
-that integrates all analyses into a single consolidated output.
+that integrates all analyses into a single output.
 """
 
 import json
-from src.core.ciaprofile import (
+from ciabot.core.ciaprofile import (
     generate_structured_profile,
     generate_detailed_report,
     generate_intelligence_report,
     calculate_metrics,
     generate_security_profile
 )
+from ..utils.paths import get_output_path
 
 def generate_comprehensive_profile(text_samples, tone="balanced"):
     """
@@ -103,38 +104,10 @@ def generate_comprehensive_profile(text_samples, tone="balanced"):
 
 def save_comprehensive_profile(profile, filename="comprehensive_profile.json"):
     """Save the comprehensive profile to a JSON file."""
-    # Convert Pydantic models to dictionaries
-    serializable_profile = {
-        "core_profile": profile["core_profile"].model_dump() if profile["core_profile"] else None,
-        "neurolinguistic_analysis": [
-            {
-                "text_sample": item["text_sample"],
-                "features": item["features"].model_dump() if item["features"] else None
-            }
-            for item in profile["neurolinguistic_analysis"]
-        ],
-        "psychological_analysis": [
-            {
-                "text_sample": item["text_sample"],
-                "dark_triad": item["dark_triad"].model_dump() if item["dark_triad"] else None
-            }
-            for item in profile["psychological_analysis"]
-        ],
-        "behavioral_analysis": [
-            {
-                "text_sample": item["text_sample"],
-                "predictions": item["predictions"].model_dump() if hasattr(item["predictions"], "model_dump") else []
-            }
-            for item in profile["behavioral_analysis"]
-        ],
-        "security_analysis": profile["security_analysis"].model_dump() if profile["security_analysis"] else None,
-        "metrics": profile["metrics"].model_dump() if profile["metrics"] else None,
-        "integrated_report": profile["integrated_report"]
-    }
-    
-    with open(filename, 'w') as f:
-        json.dump(serializable_profile, f, indent=2)
-    print(f"\nComprehensive profile saved to {filename}")
+    output_path = get_output_path(filename)
+    with open(output_path, 'w') as f:
+        json.dump(profile, f, indent=2)
+    print(f"\nComprehensive profile saved to {output_path}")
 
 def main():
     """Run the example profile generator."""

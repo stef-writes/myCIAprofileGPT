@@ -7,12 +7,14 @@ structured profile report that presents the analysis in a professional, readable
 """
 
 import json
-import os
 from datetime import datetime
+from pathlib import Path
+from .paths import get_output_path
 
 def load_comprehensive_profile(filename="comprehensive_profile.json"):
     """Load the comprehensive profile from a JSON file."""
-    with open(filename, 'r') as f:
+    profile_path = get_output_path(filename)
+    with open(profile_path, 'r') as f:
         return json.load(f)
 
 def format_trait(trait):
@@ -238,6 +240,17 @@ def generate_profile_report(profile, output_filename="profile_report.md"):
     
     print(f"Profile report generated and saved to {output_filename}")
     return output_filename
+
+def save_report(report_text, output_filename=None):
+    """Save the generated report to a file."""
+    if output_filename is None:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_filename = f"profile_report_{timestamp}.txt"
+    
+    output_path = get_output_path(output_filename)
+    with open(output_path, 'w') as f:
+        f.write(report_text)
+    print(f"Profile report generated and saved to {output_path}")
 
 def main():
     """Generate a profile report from the comprehensive profile."""
