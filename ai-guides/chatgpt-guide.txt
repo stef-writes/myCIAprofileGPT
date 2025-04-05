@@ -1,0 +1,364 @@
+Developer quickstart
+Take your first steps with the OpenAI API.
+The OpenAI API provides a simple interface to state-of-the-art AI models for text generation, natural language processing, computer vision, and more. This example generates text output from a prompt, as you might using ChatGPT.
+
+Generate text from a model
+from openai import OpenAI
+client = OpenAI()
+
+completion = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {
+            "role": "user",
+            "content": "Write a one-sentence bedtime story about a unicorn."
+        }
+    ]
+)
+
+print(completion.choices[0].message.content)
+Configure your development environment
+Install and configure an official OpenAI SDK to run the code above.
+
+Text generation and prompting
+Learn more about prompting, message roles, and building conversational apps.
+
+
+
+Analyze image inputs
+You can provide image inputs to the model as well. Scan receipts, analyze screenshots, or find objects in the real world with computer vision.
+
+Analyze the content of an image
+from openai import OpenAI
+client = OpenAI()
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "What's in this image?"},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                    },
+                },
+            ],
+        }
+    ],
+)
+
+print(response.choices[0].message.content)
+Computer vision guide
+Learn to use image inputs to the model and extract meaning from images.
+
+
+
+Extend the model with tools
+Give the model access to new data and capabilities using tools. You can either call your own custom code, or use one of OpenAI's powerful built-in tools. This example uses web search to give the model access to the latest information on the Internet.
+
+Get information for the completion from the Internet
+from openai import OpenAI
+client = OpenAI()
+
+completion = client.chat.completions.create(
+    model="gpt-4o-search-preview",
+    web_search_options={},
+    messages=[
+        {
+            "role": "user",
+            "content": "What was a positive news story from today?",
+        }
+    ],
+)
+
+print(completion.choices[0].message.content)
+Use built-in tools
+Learn about powerful built-in tools like web search and file search.
+
+Function calling guide
+Learn to enable the model to call your own custom code.
+
+
+
+Deliver blazing fast AI experiences
+Using either the new Realtime API or server-sent streaming events, you can build high performance, low-latency experiences for your users.
+
+Stream server-sent events from the API
+from openai import OpenAI
+client = OpenAI()
+
+stream = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {
+            "role": "user",
+            "content": "Say 'double bubble bath' ten times fast.",
+        },
+    ],
+    stream=True,
+)
+
+for chunk in stream:
+    print(chunk)
+    print(chunk.choices[0].delta)
+    print("****************")
+Use streaming events
+Use server-sent events to stream model responses to users fast.
+
+Get started with the Realtime API
+Use WebRTC or WebSockets for super fast speech-to-speech AI apps.
+
+
+
+Build agents
+Use the OpenAI platform to build agents capable of taking action—like controlling computers—on behalf of your users. Use the Agent SDK for Python to create orchestration logic on the backend.
+
+from agents import Agent, Runner
+import asyncio
+
+spanish_agent = Agent(
+    name="Spanish agent",
+    instructions="You only speak Spanish.",
+)
+
+english_agent = Agent(
+    name="English agent",
+    instructions="You only speak English",
+)
+
+triage_agent = Agent(
+    name="Triage agent",
+    instructions="Handoff to the appropriate agent based on the language of the request.",
+    handoffs=[spanish_agent, english_agent],
+)
+
+
+async def main():
+    result = await Runner.run(triage_agent, input="Hola, ¿cómo estás?")
+    print(result.final_output)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+# ¡Hola! Estoy bien, gracias por preguntar. ¿Y tú, cómo estás?
+Build agents that can take action
+Learn how to use the OpenAI platform to build powerful, capable AI agents.
+
+
+
+============================================
+Libraries
+Set up your development environment to use the OpenAI API with an SDK in your preferred language.
+This page covers setting up your local development environment to use the OpenAI API. You can use one of our officially supported SDKs, a community library, or your own preferred HTTP client.
+
+Create and export an API key
+Before you begin, create an API key in the dashboard, which you'll use to securely access the API. Store the key in a safe location, like a .zshrc file or another text file on your computer. Once you've generated an API key, export it as an environment variable in your terminal.
+
+
+macOS / Linux
+
+Windows
+Export an environment variable on macOS or Linux systems
+export OPENAI_API_KEY="your_api_key_here"
+OpenAI SDKs are configured to automatically read your API key from the system environment.
+
+Install an official SDK
+
+JavaScript
+
+Python
+
+.NET
+
+Java
+
+Go
+To use the OpenAI API in server-side JavaScript environments like Node.js, Deno, or Bun, you can use the official OpenAI SDK for TypeScript and JavaScript. Get started by installing the SDK using npm or your preferred package manager:
+
+Install the OpenAI SDK with npm
+npm install openai
+With the OpenAI SDK installed, create a file called example.mjs and copy the example code into it:
+
+Test a basic API request
+import OpenAI from "openai";
+const client = new OpenAI();
+
+const response = await client.responses.create({
+    model: "gpt-4o",
+    input: "Write a one-sentence bedtime story about a unicorn."
+});
+
+console.log(response.output_text);
+Execute the code with node example.mjs (or the equivalent command for Deno or Bun). In a few moments, you should see the output of your API request.
+
+============================================
+Text generation and prompting
+Learn how to prompt a model to generate text.
+With the OpenAI API, you can use a large language model to generate text from a prompt, as you might using ChatGPT. Models can generate almost any kind of text response—like code, mathematical equations, structured JSON data, or human-like prose.
+
+Here's a simple example using the Chat Completions API.
+
+Generate text from a simple prompt
+from openai import OpenAI
+client = OpenAI()
+
+completion = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {
+            "role": "user",
+            "content": "Write a one-sentence bedtime story about a unicorn."
+        }
+    ]
+)
+
+print(completion.choices[0].message.content)
+An array of content generated by the model is in the choices property of the response. In this simple example, we have just one output which looks like this:
+
+[
+    {
+        "index": 0,
+        "message": {
+            "role": "assistant",
+            "content": "Under the soft glow of the moon, Luna the unicorn danced through fields of twinkling stardust, leaving trails of dreams for every child asleep.",
+            "refusal": null
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+    }
+]
+In addition to plain text, you can also have the model return structured data in JSON format - this feature is called Structured Outputs.
+
+Message roles and instruction following
+You can provide instructions (prompts) to the model with differing levels of authority using message roles.
+
+Generate text with messages using different roles
+from openai import OpenAI
+client = OpenAI()
+
+completion = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {
+            "role": "developer",
+            "content": "Talk like a pirate."
+        },
+        {
+            "role": "user",
+            "content": "Are semicolons optional in JavaScript?"
+        }
+    ]
+)
+
+print(completion.choices[0].message.content)
+The OpenAI model spec describes how our models give different levels of priority to messages with different roles.
+
+developer	user	assistant
+developer messages are instructions provided by the application developer, weighted ahead of user messages.	user messages are instructions provided by an end user, weighted behind developer messages.	Messages generated by the model have the assistant role.
+A multi-turn conversation may consist of several messages of these types, along with other content types provided by both you and the model. Learn more about managing conversation state here.
+
+Choosing a model
+A key choice to make when generating content through the API is which model you want to use - the model parameter of the code samples above. You can find a full listing of available models here.
+
+Which model should I choose?
+Here are a few factors to consider when choosing a model for text generation.
+
+Reasoning models generate an internal chain of thought to analyze the input prompt, and excel at understanding complex tasks and multi-step planning. They are also generally slower and more expensive to use than GPT models.
+GPT models are fast, cost-efficient, and highly intelligent, but benefit from more explicit instructions around how to accomplish tasks.
+Large and small (mini) models offer trade-offs for speed, cost, and intelligence. Large models are more effective at understanding prompts and solving problems across domains, while small models are generally faster and cheaper to use. Small models like GPT-4o mini can also be trained to excel at a specific task through fine tuning and distillation of results from larger models.
+When in doubt, gpt-4o offers a solid combination of intelligence, speed, and cost effectiveness.
+
+Prompt engineering
+Creating effective instructions for a model to generate content is a process known as prompt engineering. Because the content generated from a model is non-deterministic, it is a combination of art and science to build a prompt that will generate the right kind of content from a model. You can find a more complete exploration of prompt engineering here, but here are some general guidelines:
+
+Be detailed in your instructions to the model to eliminate ambiguity in how you want the model to respond.
+Provide examples to the model of the type of inputs you expect, and the type of outputs you would want for that input - this technique is called few-shot learning.
+When using a reasoning model, describe the task to be done in terms of goals and desired outcomes, rather than specific step-by-step instructions of how to accomplish a task.
+Invest in creating evaluations (evals) for your prompts, using test data that looks like the data you expect to see in production. Due to the inherent variable results from different models, using evals to see how your prompts perform is the best way to ensure your prompts work as expected.
+Iterating on prompts is often all you need to do to get great results from a model, but you can also explore fine tuning to customize base models for a particular use case.
+
+
+
+
+
+
+
+
+=========================
+Structured Outputs
+Ensure responses adhere to a JSON schema.
+Try it out
+Try it out in the Playground or generate a ready-to-use schema definition to experiment with structured outputs.
+
+Introduction
+JSON is one of the most widely used formats in the world for applications to exchange data.
+
+Structured Outputs is a feature that ensures the model will always generate responses that adhere to your supplied JSON Schema, so you don't need to worry about the model omitting a required key, or hallucinating an invalid enum value.
+
+Some benefits of Structured Outputs include:
+
+Reliable type-safety: No need to validate or retry incorrectly formatted responses
+Explicit refusals: Safety-based model refusals are now programmatically detectable
+Simpler prompting: No need for strongly worded prompts to achieve consistent formatting
+In addition to supporting JSON Schema in the REST API, the OpenAI SDKs for Python and JavaScript also make it easy to define object schemas using Pydantic and Zod respectively. Below, you can see how to extract information from unstructured text that conforms to a schema defined in code.
+
+Getting a structured response
+from pydantic import BaseModel
+from openai import OpenAI
+
+client = OpenAI()
+
+class CalendarEvent(BaseModel):
+    name: str
+    date: str
+    participants: list[str]
+
+completion = client.beta.chat.completions.parse(
+    model="gpt-4o-2024-08-06",
+    messages=[
+        {"role": "system", "content": "Extract the event information."},
+        {"role": "user", "content": "Alice and Bob are going to a science fair on Friday."},
+    ],
+    response_format=CalendarEvent,
+)
+
+event = completion.choices[0].message.parsed
+Supported models
+Structured Outputs is available in our latest large language models, starting with GPT-4o:
+
+gpt-4.5-preview-2025-02-27 and later
+o3-mini-2025-1-31 and later
+o1-2024-12-17 and later
+gpt-4o-mini-2024-07-18 and later
+gpt-4o-2024-08-06 and later
+Older models like gpt-4-turbo and earlier may use JSON mode instead.
+
+When to use Structured Outputs via function calling vs via response_format
+Structured Outputs is available in two forms in the OpenAI API:
+
+When using function calling
+When using a json_schema response format
+Function calling is useful when you are building an application that bridges the models and functionality of your application.
+
+For example, you can give the model access to functions that query a database in order to build an AI assistant that can help users with their orders, or functions that can interact with the UI.
+
+Conversely, Structured Outputs via response_format are more suitable when you want to indicate a structured schema for use when the model responds to the user, rather than when the model calls a tool.
+
+For example, if you are building a math tutoring application, you might want the assistant to respond to your user using a specific JSON Schema so that you can generate a UI that displays different parts of the model's output in distinct ways.
+
+Put simply:
+
+If you are connecting the model to tools, functions, data, etc. in your system, then you should use function calling
+If you want to structure the model's output when it responds to the user, then you should use a structured response_format
+The remainder of this guide will focus on non-function calling use cases in the Chat Completions API. To learn more about how to use Structured Outputs with function calling, check out the Function Calling guide.
+
+Structured Outputs vs JSON mode
+Structured Outputs is the evolution of JSON mode. While both ensure valid JSON is produced, only Structured Outputs ensure schema adherance. Both Structured Outputs and JSON mode are supported in the Responses API,Chat Completions API, Assistants API, Fine-tuning API and Batch API.
+
+We recommend always using Structured Outputs instead of JSON mode when possible.
+
+However, Structured Outputs with response_format: {type: "json_schema", ...} is only supported with the gpt-4o-mini, gpt-4o-mini-2024-07-18, and gpt-4o-2024-08-06 model snapshots and later.
