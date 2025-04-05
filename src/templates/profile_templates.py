@@ -30,6 +30,15 @@ ADVANCED_ANALYSIS_DIRECTIVES = """
 3. Determine vulnerability to recruitment
 4. Assess deception probability patterns
 5. Model information sensitivity thresholds
+
+**Cultural & Socioeconomic Context:**
+1. Identify cultural lexicons and regional references
+2. Detect socioeconomic indicators and class markers
+3. Analyze cultural values and belief systems
+4. Note educational and professional background hints
+5. Observe social class and privilege indicators
+6. Only include findings with direct evidence
+7. Assign confidence scores based on evidence strength
 """
 
 # ===== PROFILE TEMPLATES =====

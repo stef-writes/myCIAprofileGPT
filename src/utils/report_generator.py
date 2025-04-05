@@ -41,6 +41,37 @@ def format_countermeasure(countermeasure):
     """Format a countermeasure for display."""
     return f"- {countermeasure}"
 
+def format_cultural_context(context):
+    """Format cultural context information for the report."""
+    if not context:
+        return ["No cultural context evidence found."]
+    
+    sections = []
+    
+    if context.cultural_lexicons:
+        sections.append("### Cultural Lexicons")
+        sections.extend(f"- {lexicon}" for lexicon in context.cultural_lexicons)
+    
+    if context.regional_references:
+        sections.append("### Regional References")
+        sections.extend(f"- {ref}" for ref in context.regional_references)
+    
+    if context.socioeconomic_indicators:
+        sections.append("### Socioeconomic Indicators")
+        sections.extend(f"- {indicator}" for indicator in context.socioeconomic_indicators)
+    
+    if context.cultural_values:
+        sections.append("### Cultural Values")
+        sections.extend(f"- {value}" for value in context.cultural_values)
+    
+    if context.evidence:
+        sections.append("### Evidence")
+        sections.extend(f"- {evidence}" for evidence in context.evidence)
+    
+    sections.append(f"\n**Confidence Score**: {context.confidence_score}")
+    
+    return sections
+
 def generate_profile_report(profile, output_filename="profile_report.md"):
     """Generate a well-formatted profile report from the comprehensive profile."""
     # Create the report content
@@ -135,9 +166,9 @@ def generate_profile_report(profile, output_filename="profile_report.md"):
 
 ---
 
-## CULTURAL LEXICONS
+## CULTURAL CONTEXT
 
-{chr(10).join(f"- {lexicon}" for lexicon in profile['core_profile']['cultural_lexicons'])}
+{chr(10).join(format_cultural_context(profile['core_profile']['cultural_context']) if profile['core_profile'].get('cultural_context') else ["No cultural context evidence found."])}
 
 ---
 

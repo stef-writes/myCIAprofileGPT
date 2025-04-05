@@ -146,6 +146,15 @@ class TeamDynamics(BaseModel):
     ideal_team_composition: List[str]
     evidence: List[str]
 
+class CulturalContext(BaseModel):
+    """Analysis of cultural influences and context."""
+    cultural_lexicons: List[str] = Field(default_factory=list)
+    regional_references: List[str] = Field(default_factory=list)
+    socioeconomic_indicators: List[str] = Field(default_factory=list)
+    cultural_values: List[str] = Field(default_factory=list)
+    evidence: List[str] = Field(default_factory=list)
+    confidence_score: float = Field(..., ge=0.0, le=1.0)
+
 class PsychologicalProfile(BaseModel):
     """A comprehensive psychological profile."""
     personality_traits: List[PersonalityTrait]
@@ -162,7 +171,7 @@ class PsychologicalProfile(BaseModel):
     dark_triad_profile: Optional[DarkTriadProfile] = None
     behavioral_predictions: Optional[List[BehavioralPrediction]] = None
     cognitive_biases: Optional[List[str]] = None
-    cultural_lexicons: Optional[List[str]] = None
+    cultural_context: Optional[CulturalContext] = None
     profile_metrics: Optional[ProfileMetrics] = None
     security_profile: Optional[SecurityProfile] = None
     # New fields
@@ -420,7 +429,14 @@ def generate_structured_profile(text: str, tone: str = "balanced") -> Psychologi
                         }
                       ],
                       "cognitive_biases": ["string"],
-                      "cultural_lexicons": ["string"],
+                      "cultural_context": {
+                        "cultural_lexicons": ["string"],
+                        "regional_references": ["string"],
+                        "socioeconomic_indicators": ["string"],
+                        "cultural_values": ["string"],
+                        "evidence": ["string"],
+                        "confidence_score": number between 0 and 1
+                      },
                       "profile_metrics": {
                         "persuasion_susceptibility": number between 0 and 1,
                         "deception_capacity": number between 0 and 1,

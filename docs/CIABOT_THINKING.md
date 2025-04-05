@@ -40,11 +40,15 @@ CIABot's analysis process follows these steps:
    - Analyzes text using the generated prompt
    - Identifies patterns and themes
    - Generates initial insights
+   - Applies neuro-linguistic programming principles
+   - Identifies embedded commands and presuppositions
 
 4. **Structured Profile Generation**
    - Extracts structured data from the analysis
    - Creates a comprehensive psychological profile
    - Validates against predefined schemas
+   - Generates confidence scores based on evidence strength
+   - Identifies potential biases and limitations
 
 ## Analysis Components
 
@@ -56,13 +60,17 @@ CIABot performs several types of analysis:
    - Quantifies hedge words vs definitive language
    - Measures lexical density and complexity
    - Identifies semantic primes
+   - Evaluates syntactic complexity
+   - Assesses temporal orientation
 
 2. **Psychological Deep Dive**
-   - Applies Dark Triad detection
+   - Applies Dark Triad detection (narcissism, machiavellianism, psychopathy)
    - Maps language to Hermann Brain Dominance model
    - Analyzes conceptual metaphors
    - Detects cognitive dissonance
    - Identifies narrative schema violations
+   - Evaluates behavioral manifestations
+   - Assesses operational risks
 
 3. **Behavioral Forecasting**
    - Predicts stress responses
@@ -70,36 +78,96 @@ CIABot performs several types of analysis:
    - Assesses recruitment vulnerability
    - Evaluates deception patterns
    - Models information sensitivity
+   - Analyzes scenario-based behaviors
+   - Identifies triggering conditions
+   - Suggests mitigation strategies
 
 4. **Communication Analysis**
    - Identifies primary and secondary communication styles
    - Assesses communication strengths and potential manipulation tactics
    - Evaluates adaptation capacity and social flexibility
    - Analyzes information sharing patterns and disclosure tendencies
+   - Measures persuasion susceptibility
+   - Evaluates deception capacity
+   - Assesses information hoarding tendencies
 
 5. **Decision-Making Assessment**
    - Evaluates decision-making approach and methodology
    - Assesses risk tolerance and uncertainty handling
    - Identifies information gathering style and confirmation bias
    - Analyzes decision speed, quality, and consistency
+   - Evaluates cognitive biases
+   - Assesses group affiliation
+   - Measures cognitive rigidity
 
 6. **Stress Response Profiling**
    - Identifies primary coping mechanisms and resilience indicators
    - Assesses stress threshold and breaking point indicators
    - Evaluates recovery patterns and adaptation strategies
    - Analyzes stress indicators and behavioral changes under pressure
+   - Identifies potential triggers
+   - Evaluates psychological vulnerabilities
 
 7. **Leadership Potential**
    - Evaluates leadership style and influence methodology
    - Assesses influence capacity and persuasion techniques
    - Analyzes vision development and strategic thinking
    - Evaluates team building ability and group dynamics
+   - Identifies key strengths and development areas
+   - Assesses strategic thinking capacity
 
 8. **Team Dynamics**
    - Identifies preferred team role and social positioning
    - Assesses collaboration style and group contribution
    - Evaluates conflict handling and resolution approach
    - Analyzes team contribution and value proposition
+   - Determines ideal team composition
+   - Evaluates team compatibility
+
+9. **Cultural & Socioeconomic Context**
+   - Identifies cultural lexicons and regional references
+   - Detects socioeconomic indicators and class markers
+   - Analyzes cultural values and belief systems
+   - Notes educational and professional background hints
+   - Observes social class and privilege indicators
+   - Only includes findings with direct evidence
+   - Assigns confidence scores based on evidence strength
+
+## Confidence Scoring
+
+CIABot employs a sophisticated confidence scoring system:
+
+1. **Evidence-Based Scoring**
+   - Direct quotes and specific examples increase confidence
+   - Multiple supporting instances strengthen confidence
+   - Lack of evidence reduces confidence
+   - Contradictory evidence lowers confidence
+   - Cultural context evidence requires direct support
+   - Socioeconomic indicators must be explicitly stated
+
+2. **Contextual Factors**
+   - Text length and quality affect confidence
+   - Consistency across multiple samples increases confidence
+   - Temporal consistency strengthens confidence
+   - Pattern repetition enhances confidence
+   - Cultural context requires multiple supporting indicators
+   - Regional references must be clearly identifiable
+
+3. **Analysis Depth**
+   - Multiple analysis dimensions increase confidence
+   - Cross-referenced findings boost confidence
+   - Comprehensive evidence base improves confidence
+   - Multiple data points strengthen confidence
+   - Cultural analysis requires multiple supporting elements
+   - Socioeconomic indicators need corroborating evidence
+
+4. **Limitation Awareness**
+   - Acknowledges data gaps
+   - Identifies potential biases
+   - Notes analysis limitations
+   - Highlights uncertainty areas
+   - Explicitly states when cultural context is uncertain
+   - Indicates when socioeconomic indicators are unclear
 
 ## Output Files
 
@@ -114,59 +182,39 @@ CIABot generates several output files, each serving a specific purpose:
    - Contains the raw analysis from GPT-4
    - Shows the initial insights and patterns
    - Demonstrates the reasoning process
+   - Includes confidence levels and evidence
 
 3. **`{unique_id}_profile.json`**
    - Structured psychological profile
    - Contains personality traits, emotional states, cognitive patterns
    - Includes writing style analysis and linguistic markers
    - Stores confidence scores and limitations
+   - Contains neurolinguistic features
+   - Includes dark triad profile
+   - Stores behavioral predictions
+   - Contains profile metrics
+   - Includes cultural context analysis
+   - Stores socioeconomic indicators
 
 4. **`{unique_id}_detailed_report.md`**
    - Comprehensive analysis in markdown format
    - Includes all findings and insights
    - Provides detailed explanations and evidence
+   - Contains confidence assessments
+   - Lists potential biases and limitations
+   - Includes cultural context section
+   - Details socioeconomic indicators
 
 5. **`{unique_id}_intelligence_report.md`**
    - CIA-style intelligence report
    - Focuses on actionable insights
    - Highlights key findings and recommendations
-
-6. **`{unique_id}_metrics.json`**
-   - Quantitative assessment metrics
-   - Measures persuasion susceptibility, deception capacity
-   - Evaluates risk tolerance and group affiliation
-   - Assesses cognitive rigidity
-
-7. **`{unique_id}_security_profile.json`**
-   - Security-oriented risk assessment
-   - Identifies OPSEC weaknesses
-   - Lists detectable patterns
-   - Suggests countermeasures
-
-## Output Determinants
-
-The content and structure of outputs are determined by:
-
-1. **Input Text Characteristics**
-   - Length and complexity
-   - Writing style and formality
-   - Emotional content
-   - Subject matter
-
-2. **Analysis Tone**
-   - Positive: Emphasizes strengths and potential
-   - Negative: Focuses on risks and limitations
-   - Balanced: Provides equal weight to both
-
-3. **Template Selection**
-   - Different templates guide the analysis
-   - Example profiles set the expected detail level
-   - Advanced directives shape the analysis depth
-
-4. **Model Parameters**
-   - GPT-4's temperature and other settings
-   - Response format requirements
-   - Structured output schemas
+   - Includes executive summary
+   - Contains behavioral patterns
+   - Lists security implications
+   - Provides final verdict
+   - Incorporates cultural context insights
+   - Addresses socioeconomic factors
 
 ## Data Models
 
@@ -193,10 +241,19 @@ CIABot uses several Pydantic models to structure its data:
    - `LeadershipPotential`: Leadership capabilities and style
    - `TeamDynamics`: Team interaction and compatibility
 
-4. **Comprehensive Profile**
+4. **Cultural Context Components**
+   - `CulturalContext`: Cultural influences and context
+   - Cultural lexicons and regional references
+   - Socioeconomic indicators and class markers
+   - Cultural values and belief systems
+   - Evidence and confidence scoring
+
+5. **Comprehensive Profile**
    - `PsychologicalProfile`: Integrates all components
    - Includes confidence scores and limitations
    - Stores optional advanced analyses
+   - Contains evidence base and validation
+   - Incorporates cultural context analysis
 
 ## Best Practices
 
@@ -206,19 +263,32 @@ To get the most out of CIABot:
    - Provide sufficient text length
    - Include diverse content types
    - Ensure text is well-formatted
+   - Consider multiple samples
+   - Include cultural context when available
+   - Note socioeconomic indicators when present
 
 2. **Tone Selection**
    - Use "balanced" for general analysis
    - Use "positive" for strength-focused analysis
    - Use "negative" for risk-focused analysis
+   - Match tone to analysis goals
+   - Consider cultural sensitivity
+   - Account for socioeconomic context
 
 3. **Output Interpretation**
    - Consider all output files together
    - Pay attention to confidence scores
    - Review evidence for each finding
    - Check for potential biases
+   - Consider limitations
+   - Evaluate cultural context evidence
+   - Assess socioeconomic indicators
 
 4. **Security Considerations**
    - Review security profiles carefully
    - Implement suggested countermeasures
-   - Monitor for pattern changes 
+   - Monitor for pattern changes
+   - Assess OPSEC implications
+   - Evaluate information handling
+   - Consider cultural security implications
+   - Account for socioeconomic factors 
